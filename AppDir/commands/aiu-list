@@ -6,12 +6,23 @@ argparse --name aiu-list 'h/help' -- $argv
 or exit
 handle_help_switch commands/aiu-list $_flag_help
 
+# just load from cache if available
+set -l cache_path (get_cache_path)
+if not test -d "$cache_path"
+    mkdir -p "$cache_path"
+end
+set -l cache_file (get_cache_file)
+if test -f "$cache_file"
+    cat "$cache_file"
+    exit 0
+end
+
 for dir in $PATH
-    set -l files (ls -p $dir 2> /dev/null | grep -v /)
+    set -l files (ls -p "$dir" 2> /dev/null | grep -v /)
     for file in $files
-        set -l full_path $dir/$file
-        aiu check $full_path &> /dev/null
-        and echo $full_path
+        set -l full_path "$dir/$file"
+        aiu check "$full_path" &> /dev/null
+        and echo "$full_path" | tee -a "$cache_file"
     end
 end
 

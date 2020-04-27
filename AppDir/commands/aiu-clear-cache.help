@@ -1,0 +1,1 @@
+Clear the AppImage cache. It will be rebuilt next time you run `aiu list`.

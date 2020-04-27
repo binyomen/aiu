@@ -26,3 +26,15 @@ function handle_help_switch -a script_name flag_val
         exit 0
     end
 end
+
+function get_cache_path
+    if set -q XDG_CACHE_HOME
+        echo "$XDG_CACHE_HOME/aiu"
+    else
+        echo "$HOME/.cache/aiu"
+    end
+end
+
+function get_cache_file
+    echo (get_cache_path)"/appimages"
+end
