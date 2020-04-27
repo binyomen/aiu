@@ -22,7 +22,7 @@ function format_updatetool_output
     echo
 end
 
-format_appimage_name echo "appimageupdatetool self-update"
+format_appimage_name "appimageupdatetool self-update"
 appimageupdatetool --self-update --overwrite &| format_updatetool_output
 
 for appimage in (aiu list)
