@@ -1,0 +1,3 @@
+Available commands:
+    list -  lists the AppImages on the system
+    check - checks whether the given argument is an AppImage

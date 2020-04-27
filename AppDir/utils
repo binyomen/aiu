@@ -1,0 +1,28 @@
+#!/usr/bin/env fish
+
+function echo_err
+    echo $argv >&2
+end
+
+function get_script_root
+    dirname (status filename)
+end
+
+function echo_help_text -a script_name
+    if not set -q script_name
+        echo_err need to provide script name
+        return 1
+    end
+    cat (get_script_root)/$script_name.help
+end
+
+function handle_help_switch -a script_name flag_val
+    if not set -q script_name
+        echo_err need to provide script name
+        return 1
+    end
+    if [ $flag_val ]
+        echo_help_text $script_name
+        exit 0
+    end
+end

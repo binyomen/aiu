@@ -1,0 +1,18 @@
+#!/usr/bin/env fish
+
+source (dirname (status filename))/../utils
+
+argparse --name aiu-list 'h/help' -- $argv
+or exit
+handle_help_switch commands/aiu-list $_flag_help
+
+for dir in $PATH
+    set -l files (ls -p $dir 2> /dev/null | grep -v /)
+    for file in $files
+        set -l full_path $dir/$file
+        aiu check $full_path &> /dev/null
+        and echo $full_path
+    end
+end
+
+exit 0

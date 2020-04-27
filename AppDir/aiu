@@ -1,0 +1,24 @@
+#!/usr/bin/env fish
+
+source (dirname (status filename))/utils
+
+argparse --name aiu --stop-nonopt 'h/help' -- $argv
+or exit
+handle_help_switch aiu $_flag_help
+
+if not set -q argv[1]
+    echo_err -e "You must provide a command.\n"
+    echo_help_text aiu >&2
+    exit 1
+end
+set -l command $argv[1]
+
+set -l command_dir_name commands
+set -l command_path (get_script_root)/$command_dir_name/aiu-$command
+if not test -f $command_path -a -x $command_path
+    echo_err "$command is an invalid command."
+    echo_help_text aiu >&2
+    exit 1
+end
+
+eval $command_path $argv[2..-1]

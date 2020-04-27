@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=aiu
+Comment=AppImage utilities
+Exec=aiu
+Terminal=true
+Type=Application
+Icon=aiu
+Categories=Utility;
