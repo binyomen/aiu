@@ -9,37 +9,37 @@ or exit
 handle_help_switch commands/aiu-check $_flag_help
 
 function quit_check -a result msg
-    echo_err $msg
+    echo_err "$msg"
     exit $result
 end
 
 function get_bytes_at_offset -a file offset length
     # borrowed from https://stackoverflow.com/questions/19215180/bash-get-the-bytes-at-offset-for-length
-    hexdump -s $offset -n $length -e "$length/1 \"%02x\" \"\n\"" $file
+    hexdump -s $offset -n $length -e "$length/1 \"%02x\" \"\n\"" "$file"
 end
 
 function test_bytes -a file offset length expected_bytes
-    set -l bytes (get_bytes_at_offset $file $offset $length)
+    set -l bytes (get_bytes_at_offset "$file" $offset $length)
     [ $bytes = $expected_bytes ]
 end
 
 function is_elf -a file
-    test_bytes $file 0x0 4 7f454c46
+    test_bytes "$file" 0x0 4 7f454c46
 end
 
 function is_type1 -a file
-    test_bytes $file 0x8 3 414901
+    test_bytes "$file" 0x8 3 414901
 end
 
 function is_type2 -a file
-    test_bytes $file 0x8 3 414902
+    test_bytes "$file" 0x8 3 414902
 end
 
 function is_iso_9660 -a file
     # try the same signature at different offsets
-    test_bytes $file 0x8001 5 4344303031
-    or test_bytes $file 0x8801 5 4344303031
-    or test_bytes $file 0x9001 5 4344303031
+    test_bytes "$file" 0x8001 5 4344303031
+    or test_bytes "$file" 0x8801 5 4344303031
+    or test_bytes "$file" 0x9001 5 4344303031
 end
 
 if not set -q argv[1]
@@ -47,19 +47,19 @@ if not set -q argv[1]
     echo_help_text commands/aiu-check >&2
     exit 1
 end
-set -l file $argv[1]
+set -l file "$argv[1]"
 
-is_elf $file
+is_elf "$file"
 or quit_check 1 "'$file' is not an ELF binary, so it can't be an AppImage"
 echo_err "'$file' is an ELF binary."
 
-is_type1 $file
+is_type1 "$file"
 and quit_check 0 "'$file' is a Type 1 AppImage."
 
-is_type2 $file
+is_type2 "$file"
 and quit_check 0 "'$file' is a Type 2 AppImage."
 
-is_iso_9660 $file
+is_iso_9660 "$file"
 and quit_check 0 "'$file' seems to be a Type 1 AppImage without magic bytes."
 
 quit_check 1 "'$file' is not an AppImage."

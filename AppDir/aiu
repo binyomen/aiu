@@ -11,14 +11,14 @@ if not set -q argv[1]
     echo_help_text aiu >&2
     exit 1
 end
-set -l command $argv[1]
+set -l command "$argv[1]"
 
 set -l command_dir_name commands
-set -l command_path (get_script_root)/$command_dir_name/aiu-$command
-if not test -f $command_path -a -x $command_path
+set -l command_path (get_script_root)"/$command_dir_name/aiu-$command"
+if not test -f "$command_path" -a -x "$command_path"
     echo_err "$command is an invalid command."
     echo_help_text aiu >&2
     exit 1
 end
 
-eval $command_path $argv[2..-1]
+eval "$command_path" $argv[2..-1]
