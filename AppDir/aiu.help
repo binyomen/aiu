@@ -3,3 +3,4 @@ Available commands:
     check       - checks whether the given argument is an AppImage
     clear-cache - clears the cache of any AppImages on the system. Can be
                   rebuilt with `aiu list`
+    update      - updates all tracked AppImages

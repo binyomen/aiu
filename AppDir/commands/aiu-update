@@ -1,0 +1,31 @@
+#!/usr/bin/env fish
+
+source (dirname (status filename))/../utils
+
+argparse --name aiu-update 'h/help' -- $argv
+or exit
+handle_help_switch commands/aiu-update $_flag_help
+
+function format_appimage_name -a name
+    isatty stdout
+    and set_color --bold red
+
+    echo -e "$name"
+
+    set_color normal
+end
+
+function format_updatetool_output
+    while read -l line
+        echo "    $line"
+    end
+    echo
+end
+
+format_appimage_name echo "appimageupdatetool self-update"
+appimageupdatetool --self-update --overwrite &| format_updatetool_output
+
+for appimage in (aiu list)
+    format_appimage_name (basename "$appimage")
+    appimageupdatetool --overwrite "$appimage" &| format_updatetool_output
+end
