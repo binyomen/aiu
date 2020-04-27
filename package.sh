@@ -9,4 +9,5 @@ else
 fi
 
 ARCH=$arch appimagetool -v "$script_location/AppDir"
-mv aiu-x86_64.AppImage ~/bin/aiu
+echo
+mv --verbose aiu-x86_64.AppImage ~/bin/aiu
