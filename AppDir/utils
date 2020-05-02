@@ -9,7 +9,7 @@ function get_script_root
 end
 
 function echo_help_text -a script_name
-    if not set -q script_name
+    if [ -z "$script_name" ]
         echo_err need to provide script name
         return 1
     end
@@ -17,7 +17,7 @@ function echo_help_text -a script_name
 end
 
 function handle_help_switch -a script_name flag_val
-    if not set -q script_name
+    if [ -z "$script_name" ]
         echo_err need to provide script name
         return 1
     end
@@ -28,7 +28,7 @@ function handle_help_switch -a script_name flag_val
 end
 
 function get_cache_path
-    if set -q XDG_CACHE_HOME
+    if [ -n "$XDG_CACHE_HOME" ]
         echo "$XDG_CACHE_HOME/aiu"
     else
         echo "$HOME/.cache/aiu"

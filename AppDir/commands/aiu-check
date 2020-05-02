@@ -42,7 +42,7 @@ function is_iso_9660 -a file
     or test_bytes "$file" 0x9001 5 4344303031
 end
 
-if not set -q argv[1]
+if [ -z "$argv[1]" ]
     echo_err -e "You must provide a file to test.\n"
     echo_help_text commands/aiu-check >&2
     exit 1
