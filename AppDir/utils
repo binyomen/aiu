@@ -21,7 +21,7 @@ function handle_help_switch -a script_name flag_val
         echo_err need to provide script name
         return 1
     end
-    if [ "$flag_val" ]
+    if [ -n "$flag_val" ]
         echo_help_text "$script_name"
         exit 0
     end
