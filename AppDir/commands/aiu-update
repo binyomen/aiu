@@ -22,10 +22,19 @@ function format_updatetool_output
     echo
 end
 
-format_appimage_name "appimageupdatetool self-update"
-appimageupdatetool --self-update --overwrite &| format_updatetool_output
-
-for appimage in (aiu list)
+function update_appimage -a appimage
     format_appimage_name (basename "$appimage")
     appimageupdatetool --overwrite "$appimage" &| format_updatetool_output
+end
+
+if [ -n "$argv[1]" ]
+    set -l appimage $argv[1]
+    update_appimage "$appimage"
+else
+    format_appimage_name "appimageupdatetool self-update"
+    appimageupdatetool --self-update --overwrite &| format_updatetool_output
+
+    for appimage in (aiu list)
+        update_appimage "$appimage"
+    end
 end
