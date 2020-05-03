@@ -15,16 +15,49 @@ function format_appimage_name -a name
     set_color normal
 end
 
-function format_updatetool_output
+function format_update_output
     while read -l line
         echo "    $line"
     end
     echo
 end
 
+function get_path_files
+    set -l update_dir (get_update_dir)
+    set -l path_files (ls -p "$update_dir" 2> /dev/null | grep -v / | grep -x ".\\+\\.paths")
+    for file in $path_files
+        echo "$update_dir/$file"
+    end
+end
+
+function get_update_scripts -a appimage
+    set -l path_files (get_path_files)
+    for file in $path_files
+        set -l contents (cat "$file")
+        for line in $contents
+            if [ "$line" = "$appimage" ]
+                set -l script_path (string replace --regex ".paths\$" "" "$file")
+                echo "$script_path"
+                break
+            end
+        end
+    end
+end
+
 function update_appimage -a appimage
     format_appimage_name (basename "$appimage")
-    appimageupdatetool --overwrite "$appimage" &| format_updatetool_output
+    if aiu check --updatable "$appimage"
+        appimageupdatetool --overwrite "$appimage" &| format_update_output
+    else
+        set -l update_scripts (get_update_scripts "$appimage")
+        if [ (count $update_scripts) -eq 0 ]
+            echo "Update not supported." &| format_update_output
+            return
+        end
+        for script in $update_scripts
+            APPIMAGE="$appimage" "$script" &| format_update_output
+        end
+    end
 end
 
 if [ -n "$argv[1]" ]
@@ -32,7 +65,7 @@ if [ -n "$argv[1]" ]
     update_appimage "$appimage"
 else
     format_appimage_name "appimageupdatetool self-update"
-    appimageupdatetool --self-update --overwrite &| format_updatetool_output
+    appimageupdatetool --self-update --overwrite &| format_update_output
 
     for appimage in (aiu list)
         update_appimage "$appimage"

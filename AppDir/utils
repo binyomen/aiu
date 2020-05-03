@@ -38,3 +38,15 @@ end
 function get_cache_file
     echo (get_cache_path)"/appimages"
 end
+
+function get_config_path
+    if [ -n "$XDG_CONFIG_HOME" ]
+        echo "$XDG_CONFIG_HOME/aiu"
+    else
+        echo "$HOME/.config/aiu"
+    end
+end
+
+function get_update_dir
+    echo (get_config_path)"/update"
+end
