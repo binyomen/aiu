@@ -4,7 +4,7 @@ source (dirname (status filename))/../utils
 
 argparse --name aiu-update 'h/help' 's/allow-update-scripts' -- $argv
 or exit
-handle_help_switch commands/aiu-update $_flag_help
+handle_help_switch commands/aiu-update "$_flag_help"
 
 function format_appimage_name -a name
     isatty stdout

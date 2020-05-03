@@ -6,7 +6,7 @@ source (dirname (status filename))/../utils
 
 argparse --name aiu-check 'h/help' 'u/updatable' -- $argv
 or exit
-handle_help_switch commands/aiu-check $_flag_help
+handle_help_switch commands/aiu-check "$_flag_help"
 
 function quit_check -a result msg
     echo_err "$msg"

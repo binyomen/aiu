@@ -4,7 +4,7 @@ source (dirname (status filename))/../utils
 
 argparse --name aiu-list 'h/help' -- $argv
 or exit
-handle_help_switch commands/aiu-list $_flag_help
+handle_help_switch commands/aiu-list "$_flag_help"
 
 # just load from cache if available
 set -l cache_path (get_cache_path)

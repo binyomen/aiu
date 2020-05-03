@@ -4,7 +4,7 @@ source (dirname (status filename))/../utils
 
 argparse --name aiu-clear-cache 'h/help' -- $argv
 or exit
-handle_help_switch commands/aiu-clear-cache $_flag_help
+handle_help_switch commands/aiu-clear-cache "$_flag_help"
 
 set -l cache_path (get_cache_path)
 if test -d "$cache_path"

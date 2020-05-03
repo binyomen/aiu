@@ -4,7 +4,7 @@ source (dirname (status filename))/utils
 
 argparse --name aiu --stop-nonopt 'h/help' -- $argv
 or exit
-handle_help_switch aiu $_flag_help
+handle_help_switch aiu "$_flag_help"
 
 if [ -z "$argv[1]" ]
     echo_err -e "You must provide a command.\n"
