@@ -4,7 +4,7 @@
 
 source (dirname (status filename))/../utils
 
-argparse --name aiu-check 'h/help' -- $argv
+argparse --name aiu-check 'h/help' 'u/updatable' -- $argv
 or exit
 handle_help_switch commands/aiu-check $_flag_help
 
@@ -49,17 +49,27 @@ if [ -z "$argv[1]" ]
 end
 set -l file "$argv[1]"
 
-is_elf "$file"
-or quit_check 1 "'$file' is not an ELF binary, so it can't be an AppImage"
-echo_err "'$file' is an ELF binary."
+if [ -n "$_flag_updatable" ]
+    appimageupdatetool --check-for-update "$file" &> /dev/null
+    set -l result $status
+    if [ "$result" -eq 0 -o "$result" -eq 1 ]
+        exit 0
+    else
+        exit 1
+    end
+else
+    is_elf "$file"
+    or quit_check 1 "'$file' is not an ELF binary, so it can't be an AppImage"
+    echo_err "'$file' is an ELF binary."
 
-is_type1 "$file"
-and quit_check 0 "'$file' is a Type 1 AppImage."
+    is_type1 "$file"
+    and quit_check 0 "'$file' is a Type 1 AppImage."
 
-is_type2 "$file"
-and quit_check 0 "'$file' is a Type 2 AppImage."
+    is_type2 "$file"
+    and quit_check 0 "'$file' is a Type 2 AppImage."
 
-is_iso_9660 "$file"
-and quit_check 0 "'$file' seems to be a Type 1 AppImage without magic bytes."
+    is_iso_9660 "$file"
+    and quit_check 0 "'$file' seems to be a Type 1 AppImage without magic bytes."
 
-quit_check 1 "'$file' is not an AppImage."
+    quit_check 1 "'$file' is not an AppImage."
+end

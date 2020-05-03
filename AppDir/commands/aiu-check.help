@@ -1,2 +1,4 @@
+aiu check [-u|--updatable]
+
 Pass in a file path. Exits with 0 if the file is an AppImage, exits with 1
 otherwise.
