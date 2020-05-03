@@ -21,4 +21,4 @@ if not test -f "$command_path" -a -x "$command_path"
     exit 1
 end
 
-eval "$command_path" $argv[2..-1]
+"$command_path" $argv[2..-1]
