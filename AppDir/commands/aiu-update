@@ -2,7 +2,7 @@
 
 source (dirname (status filename))/../utils
 
-argparse --name aiu-update 'h/help' -- $argv
+argparse --name aiu-update 'h/help' 's/allow-update-scripts' -- $argv
 or exit
 handle_help_switch commands/aiu-update $_flag_help
 
@@ -44,30 +44,32 @@ function get_update_scripts -a appimage
     end
 end
 
-function update_appimage -a appimage
+function update_appimage -a appimage allow_update_scripts
     format_appimage_name (basename "$appimage")
     if aiu check --updatable "$appimage"
         appimageupdatetool --overwrite "$appimage" &| format_update_output
-    else
+        return
+    else if [ -n "$allow_update_scripts" ]
         set -l update_scripts (get_update_scripts "$appimage")
-        if [ (count $update_scripts) -eq 0 ]
-            echo "Update not supported." &| format_update_output
+        if [ (count $update_scripts) -gt 0 ]
+            for script in $update_scripts
+                APPIMAGE="$appimage" "$script" &| format_update_output
+            end
             return
         end
-        for script in $update_scripts
-            APPIMAGE="$appimage" "$script" &| format_update_output
-        end
     end
+
+    echo "Update not supported." &| format_update_output
 end
 
 if [ -n "$argv[1]" ]
     set -l appimage $argv[1]
-    update_appimage "$appimage"
+    update_appimage "$appimage" "$_flag_s"
 else
     format_appimage_name "appimageupdatetool self-update"
     appimageupdatetool --self-update --overwrite &| format_update_output
 
     for appimage in (aiu list)
-        update_appimage "$appimage"
+        update_appimage "$appimage" "$_flag_s"
     end
 end
