@@ -17,12 +17,17 @@ if test -f "$cache_file"
     exit 0
 end
 
+set -l seen_dirs
 for dir in $PATH
-    set -l files (ls -p "$dir" 2> /dev/null | grep -v /)
-    for file in $files
-        set -l full_path "$dir/$file"
-        aiu check "$full_path" &> /dev/null
-        and echo "$full_path" | tee -a "$cache_file"
+    if not contains $dir $seen_dirs
+        set -l files (ls -p "$dir" 2> /dev/null | grep -v /)
+        for file in $files
+            set -l full_path "$dir/$file"
+            aiu check "$full_path" &> /dev/null
+            and echo "$full_path" | tee -a "$cache_file"
+        end
+
+        set -a seen_dirs $dir
     end
 end
 
